@@ -158,14 +158,16 @@ class PrettyPhoto {
 			$fileName = explode( ':', $anchor->getAttribute( 'href' ) );
 			$fileName = array_pop( $fileName );
 			$fileTitle = Title::newFromText( $fileName, NS_FILE );
-			$anchor->setAttribute( 'href', static::getImagePreviewUrl( $fileTitle ) );
-			$description = $anchor->hasAttribute( 'title' ) ?
-				$anchor->getAttribute( 'title' ) : $currThumbDesc;
-			if ( $description === '' ) {
-				$description = $fileName;
+			if ( is_object( $fileTitle ) ) {
+				$anchor->setAttribute( 'href', static::getImagePreviewUrl( $fileTitle ) );
+				$description = $anchor->hasAttribute( 'title' ) ?
+					$anchor->getAttribute( 'title' ) : $currThumbDesc;
+				if ( $description === '' ) {
+					$description = $fileName;
+				}
+				$anchor->setAttribute( 'title', $description );
+				$anchor->setAttribute( 'data-prettyphoto-link', '<a href="' . rawUrlEncode( $fileTitle->getLinkUrl() ) . '" target="_blank">' . $description . '</a>' );
 			}
-			$anchor->setAttribute( 'title', $description );
-			$anchor->setAttribute( 'data-prettyphoto-link', '<a href="' . rawUrlEncode( $fileTitle->getLinkUrl() ) . '" target="_blank">' . $description . '</a>' );
 			$anchorIdx++;
 		}
 		$result = static::removeHtmlBody( $tree->saveHTML() );
