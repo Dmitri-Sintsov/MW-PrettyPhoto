@@ -153,12 +153,12 @@ class PrettyPhoto {
 		$anchorIdx = 0;
 		foreach ( $anchors as $anchor ) {
 			$currThumbDesc = array_key_exists( $anchorIdx, $thumbCapDesc ) ? $thumbCapDesc[$anchorIdx] : '';
-			$anchorClass = $anchor->hasAttribute( 'class' ) ? $anchor->getAttribute( 'class' ) : '';
-			$anchor->setAttribute( 'class', "{$anchorClass} ext-prettyphoto" );
+			$anchorClass = $anchor->hasAttribute( 'class' ) ? $anchor->getAttribute( 'class' ) . ' ' : '';
 			$fileName = explode( ':', $anchor->getAttribute( 'href' ) );
 			$fileName = array_pop( $fileName );
 			$fileTitle = Title::newFromText( $fileName, NS_FILE );
-			if ( is_object( $fileTitle ) ) {
+			if ( $fileTitle instanceof Title ) {
+				$anchor->setAttribute( 'class', "{$anchorClass}ext-prettyphoto" );
 				$anchor->setAttribute( 'href', static::getImagePreviewUrl( $fileTitle ) );
 				$description = $anchor->hasAttribute( 'title' ) ?
 					$anchor->getAttribute( 'title' ) : $currThumbDesc;
